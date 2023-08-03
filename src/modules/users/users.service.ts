@@ -20,26 +20,33 @@ export class UsersService {
           })
     }
 //find all users
-    async findUser(){
-        await prisma.user.findMany()
+    async findUser(userId: number){
+        return prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
     }
 
 //delete user
-    async deleteUser(){
-        await prisma.user.delete({
+    async deleteUser(email: string){
+         prisma.user.delete({
             where: {
-                id: 1,
+                email: email,
             }
         })
     }
 //update user
-    async updateUser(){
-        await prisma.user.update({
+    updateUser(userId: number, userData: userDTO){
+        prisma.user.update({
             where: {
-                id: 1,
+                id: userId,
               },
               data: {
-                name: 'Viola the Magnificent',
+                name: userData.name,
+                email: userData.email,
+                userName: userData.userName,
+                password: userData.password,
               },
         })
     }

@@ -10,20 +10,26 @@ export class UsersController {
     @Post()
     async createUser(@Body() userDTO: userDTO){
         this.userService.addUser(userDTO);
+        console.log(userDTO);
+        console.log(this.userService.addUser(userDTO));
+        return 'create user success';
     }
 
     @Get()
-    async findUser(){
-        this.userService.findUser();
+    findUser(userId: number){
+        return this.userService.findUser(userId);
     }
 
     @Put()
-    async updateUser(){
-        this.userService.updateUser();
+    updateUser(userId:number, @Body() userDTO: userDTO){
+        this.userService.updateUser(userId, userDTO);
+        return `updated user with id ${userId}`
     }
 
     @Delete()
-    async deleteUser(){
-        this.userService.deleteUser();
+    async deleteUser(@Param('email') email: string){
+        this.userService.deleteUser(email);
+        console.log(email);
+        return `deleted user with id ${+email}`
     }
 }
