@@ -34,6 +34,15 @@ export class UsersService {
     })
   }
 
+  //find with username
+  findUser(userName: string) {
+    return prisma.user.findUnique({
+      where:{
+        userName: userName
+      }
+    })
+  }
+
   //update user
   async update(id: number, updateUserDto: UpdateUserDto) {
     await prisma.user.update({
