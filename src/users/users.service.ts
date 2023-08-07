@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
@@ -9,15 +9,26 @@ export class UsersService {
 
   //create user
   async create(createUserDto: CreateUserDto) {
-    await prisma.user.create({
-      data: {
-        name: createUserDto.name,
-        email: createUserDto.email,
-        userName: createUserDto.userName,
-        password: createUserDto.password
-      }
-    })
-    return 'This action adds a new user';
+    try{
+      await prisma.user.create({
+        data: {
+          name: createUserDto.name,
+          email: createUserDto.email,
+          userName: createUserDto.userName,
+          password: createUserDto.password
+        }
+      })
+      return 'user added';
+    }
+    
+    catch(error){
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
   }
   
   //find all users
@@ -57,7 +68,7 @@ export class UsersService {
       }
     })
 
-    return `This action updates a #${id} user`;
+    return `updates a #${id} user`;
   }
 
   async remove(id: number) {
@@ -66,6 +77,6 @@ export class UsersService {
         id: id
       }
     })
-    return `This action removes a #${id} user`;
+    return `removes a #${id} user`;
   }
 }
