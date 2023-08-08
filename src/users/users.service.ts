@@ -67,7 +67,7 @@ export class UsersService {
         password: updateUserDto.password,
       }
     })
-
+    console.log(updateUserDto)
     return `updates a #${id} user`;
   }
 
