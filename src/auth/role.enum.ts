@@ -1,4 +1,4 @@
-//role list save into a array
+//role list save into a obj
 
 export enum Role{
     admin = 1,

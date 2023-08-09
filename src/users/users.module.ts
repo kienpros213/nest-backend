@@ -8,10 +8,6 @@ import { RolesGuard } from 'src/auth/roles.guard';
   controllers: [UsersController],
   providers: [
     UsersService,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard
-    }
   ],
   exports: [UsersService]
 })
