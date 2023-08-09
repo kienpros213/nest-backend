@@ -9,19 +9,39 @@ export class UsersService {
 
   //create user
   async create(createUserDto: CreateUserDto) {
-    try{
+    try {
+
+      //create user
       await prisma.user.create({
         data: {
           name: createUserDto.name,
           email: createUserDto.email,
           userName: createUserDto.userName,
-          password: createUserDto.password
+          password: createUserDto.password,
+        },
+      })
+
+      //find user userName
+      const user = await prisma.user.findUnique({
+        where: {
+          userName: createUserDto.userName
         }
+      })
+ 
+      //map roles
+      createUserDto.role.map( async (item) => {
+        console.log(item)
+        await prisma.roleUser.create({
+          data: {
+            userId: user.id,
+            roleId: item
+          }
+        });
       })
       return 'user added';
     }
-    
-    catch(error){
+
+    catch (error) {
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
         error: error,
@@ -30,7 +50,7 @@ export class UsersService {
       });
     }
   }
-  
+
   //find all users
   findAll() {
     return prisma.user.findMany();
@@ -39,16 +59,17 @@ export class UsersService {
   //find user with id
   findOne(id: number) {
     return prisma.user.findUnique({
-      where:{
-        id: id
-      }
+      where: { id: id },
+      include: {
+        roles: true
+      },
     })
   }
 
   //find with username
   findUser(userName: string) {
     return prisma.user.findUnique({
-      where:{
+      where: {
         userName: userName
       }
     })
@@ -57,7 +78,7 @@ export class UsersService {
   //update user
   async update(id: number, updateUserDto: UpdateUserDto) {
     await prisma.user.update({
-      where:{
+      where: {
         id: id,
       },
       data: {
@@ -73,7 +94,7 @@ export class UsersService {
 
   async remove(id: number) {
     await prisma.user.delete({
-      where:{
+      where: {
         id: id
       }
     })

@@ -8,9 +8,26 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String? @db.VarChar(255)
-  email    String  @unique(map: "email") @db.VarChar(255)
-  userName String  @unique(map: "userName") @db.VarChar(255)
-  password String  @db.VarChar(255)
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  userName String     @unique
+  password String
+  roles    RoleUser[]
+}
+
+model Role {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  users RoleUser[]
+}
+
+model RoleUser {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  roleId Int
+  user   User @relation(fields: [userId], references: [id])
+  role   Role @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, roleId])
 }
